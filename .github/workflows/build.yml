@@ -34,4 +34,4 @@ jobs:
       - name: Upload to GitHub Pages
         uses: actions/upload-pages-artifact@v1
         with:
-          path: dist/angular-githubaction/*
+          path: dist/freezing-snail.github.io/*
