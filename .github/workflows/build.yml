@@ -28,10 +28,10 @@ jobs:
         run: |
           npm i
           npm run build
-          ls
+          echo "-----"
           ls ./dist
 
       - name: Upload to GitHub Pages
         uses: actions/upload-pages-artifact@v1
         with:
-          path: dist/freezing-snail.github.io/*
+          path: ./dist/freezing-snail.github.io/*
