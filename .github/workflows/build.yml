@@ -27,7 +27,7 @@ jobs:
       - name: npm install and npm run build
         run: |
           npm i
-          npm run build:prod
+          npm run build
 
       - name: Upload to GitHub Pages
         uses: actions/upload-pages-artifact@v1
