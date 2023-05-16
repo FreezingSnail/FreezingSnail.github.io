@@ -28,8 +28,10 @@ jobs:
         run: |
           npm i
           npm run build
+          ls
+          ls ./dist
 
       - name: Upload to GitHub Pages
         uses: actions/upload-pages-artifact@v1
         with:
-          path: public
+          path: dist/angular-githubaction/*
