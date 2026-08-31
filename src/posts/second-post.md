@@ -2,7 +2,7 @@
 title: Second Post
 date: 2026-08-30
 description: The second post on wobpager, with a list and a code fence.
-layout: base.njk
+layout: post.njk
 permalink: /posts/{{ page.fileSlug }}/
 ---
 

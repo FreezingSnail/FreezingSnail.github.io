@@ -5,4 +5,18 @@ description: A static blog built with Eleventy.
 ---
 
 <h1>wobpager</h1>
-<p>Placeholder homepage. Post list coming soon.</p>
+
+{% if collections.posts | length %}
+  <p>Latest posts:</p>
+  <ul class="post-list">
+    {% for post in collections.posts %}
+      <li class="glass">
+        <h2><a href="{{ post.url }}">{{ post.data.title }}</a></h2>
+        <p class="post-date">{{ post.date.toISOString().split('T')[0] }}</p>
+        {% if post.data.description %}<p class="post-description">{{ post.data.description }}</p>{% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="glass">No posts yet. Check back soon.</p>
+{% endif %}

@@ -2,7 +2,7 @@
 title: Hello World
 date: 2026-08-31
 description: First post on wobpager — hello, world.
-layout: base.njk
+layout: post.njk
 permalink: /posts/{{ page.fileSlug }}/
 ---
 

@@ -1,0 +1,68 @@
+---
+layout: base.njk
+---
+<style>
+/* Prism token palette — terminal-friendly, matches Futiger Aero theme */
+pre code .token.comment,
+pre code .token.prolog,
+pre code .token.doctype,
+pre code .token.cdata {
+  color: var(--term-dim, #7fb9c4);
+  font-style: italic;
+}
+pre code .token.punctuation {
+  color: var(--term-text, #cfe9ef);
+}
+pre code .token.property,
+pre code .token.tag,
+pre code .token.constant,
+pre code .token.symbol,
+pre code .token.deleted {
+  color: var(--aqua-bright, #7fd4e8);
+}
+pre code .token.boolean,
+pre code .token.number {
+  color: #f0c674;
+}
+pre code .token.selector,
+pre code .token.attr-name,
+pre code .token.string,
+pre code .token.char,
+pre code .token.builtin,
+pre code .token.inserted {
+  color: var(--sea-foam, #8ff0d4);
+}
+pre code .token.operator,
+pre code .token.entity,
+pre code .token.url {
+  color: #b5e8f0;
+}
+pre code .token.atrule,
+pre code .token.attr-value,
+pre code .token.keyword {
+  color: #e08ff0;
+}
+pre code .token.function,
+pre code .token.class-name {
+  color: #ffd479;
+}
+pre code .token.regex,
+pre code .token.important,
+pre code .token.variable {
+  color: #ff9d8f;
+}
+pre code .token.important,
+pre code .token.bold {
+  font-weight: bold;
+}
+pre code .token.italic {
+  font-style: italic;
+}
+</style>
+<article>
+  <h1>{{ title }}</h1>
+  {% if date %}<time datetime="{{ date }}">{{ date }}</time>{% endif %}
+  {% if description %}<p class="post-description">{{ description }}</p>{% endif %}
+  {{ content | safe }}
+  <p><a href="/">← Back to home</a></p>
+</article>
