@@ -94,7 +94,7 @@ body::after {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  filter: blur(24px) saturate(1.15) brightness(0.88) contrast(0.95);
+  filter: blur(24px) saturate(1.2) brightness(1.05) contrast(0.98);
   transform: scale(1.1);
   will-change: opacity;
   animation: ocean-crossfade 48s linear infinite;
