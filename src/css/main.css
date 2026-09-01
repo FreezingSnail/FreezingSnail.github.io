@@ -1,9 +1,10 @@
 /* ============================================================
    wobpager — Theme v3: terminal-in-water
    Pure CSS. No frameworks, no JS.
-   Background: 4 Wikimedia Commons ocean photos (src/img/ocean1-4.jpg),
-   CSS-only crossfade slideshow via fixed pseudo-element layers,
-   rendered as heavy ambient blur under a dark navy-green overlay.
+   Background: 4 Wikimedia Commons photos (hotlinked, various fish habitats:
+   kelp forest, open-water school, jellyfish, coral reef), CSS-only crossfade
+   slideshow via fixed pseudo-element layers, rendered as heavy ambient blur
+   under a dark navy-green overlay.
    Panels read as frosted terminal windows floating on blurred sea.
    ============================================================ */
 
@@ -94,7 +95,7 @@ body::after {
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  filter: blur(24px) saturate(1.2) brightness(1.05) contrast(0.98);
+  filter: blur(24px) saturate(1.2) brightness(0.8) contrast(0.98);
   transform: scale(1.1);
   will-change: opacity;
   animation: ocean-crossfade 48s linear infinite;
@@ -103,22 +104,22 @@ body::after {
 /* dark navy-green overlay per layer so the photos read as ambient blur */
 html::before {
     background-image: linear-gradient(rgba(6, 20, 28, 0.32), rgba(6, 20, 28, 0.32)),
-    url("../img/ocean1.jpg");
+    url("https://upload.wikimedia.org/wikipedia/commons/6/60/Kelp_forest_and_sardines%2C_San_Clemente_Island%2C_Channel_Islands%2C_California.jpg");
   animation-delay: 0s;
 }
 html::after {
   background-image: linear-gradient(rgba(6, 20, 28, 0.32), rgba(6, 20, 28, 0.32)),
-    url("../img/ocean2.jpg");
+    url("https://upload.wikimedia.org/wikipedia/commons/9/9e/School_of_Fish_in_the_Water_-_panoramio.jpg");
   animation-delay: -12s;
 }
 body::before {
   background-image: linear-gradient(rgba(6, 20, 28, 0.32), rgba(6, 20, 28, 0.32)),
-    url("../img/ocean3.jpg");
+    url("https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Lion%27s_mane_jellyfish_in_Gullmarn_fjord_at_S%C3%A4mstad_8.jpg/3840px-Lion%27s_mane_jellyfish_in_Gullmarn_fjord_at_S%C3%A4mstad_8.jpg");
   animation-delay: -24s;
 }
 body::after {
   background-image: linear-gradient(rgba(6, 20, 28, 0.32), rgba(6, 20, 28, 0.32)),
-    url("../img/ocean4.jpg");
+    url("https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Coral_Outcrop_Flynn_Reef.jpg/3840px-Coral_Outcrop_Flynn_Reef.jpg");
   animation-delay: -36s;
 }
 

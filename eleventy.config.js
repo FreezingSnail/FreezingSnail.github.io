@@ -12,7 +12,6 @@ export default function (eleventyConfig) {
     description: "A static blog built with Eleventy.",
   });
   eleventyConfig.addPassthroughCopy("src/css");
-  eleventyConfig.addPassthroughCopy({ "src/img": "img" });
   eleventyConfig.addCollection("posts", (collectionApi) => {
     return collectionApi
       .getFilteredByGlob("src/posts/*.md")
