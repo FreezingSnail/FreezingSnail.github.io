@@ -1,8 +1,6 @@
-import rssPlugin from "@11ty/eleventy-plugin-rss";
 import syntaxHighlight from "@11ty/eleventy-plugin-syntaxhighlight";
 
 export default function (eleventyConfig) {
-  eleventyConfig.addPlugin(rssPlugin);
   eleventyConfig.addPlugin(syntaxHighlight, {
     preAttributes: { tabindex: 0 },
   });
