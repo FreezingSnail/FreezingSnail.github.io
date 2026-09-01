@@ -160,11 +160,6 @@ h1, h2, h3 {
   color: var(--aqua-bright);
   line-height: 1.25;
   letter-spacing: 0.02em;
-  /* layered aqua glow — visible over glass panels */
-  text-shadow:
-    0 0 8px rgba(127, 212, 232, 0.55),
-    0 0 22px rgba(79, 209, 197, 0.4),
-    0 0 48px rgba(79, 209, 197, 0.25);
 }
 
 h1 {
@@ -211,13 +206,12 @@ a {
   color: var(--aqua);
   text-decoration: none;
   border-bottom: 1px solid rgba(79, 209, 197, 0.35);
-  transition: color 0.18s ease, text-shadow 0.18s ease, border-color 0.18s ease;
+  transition: color 0.18s ease, border-color 0.18s ease;
 }
 
 a:hover {
   color: var(--aqua-bright);
   border-color: var(--aqua-bright);
-  text-shadow: 0 0 12px rgba(127, 212, 232, 0.6);
 }
 
 /* --- Glass panels: frosted terminal windows ----------------- */
