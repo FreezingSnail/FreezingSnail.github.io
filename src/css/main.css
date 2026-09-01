@@ -257,19 +257,18 @@ blockquote {
   backdrop-filter: blur(22px) saturate(1.3);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius);
-  box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(120, 200, 230, 0.12);
-  background-image: linear-gradient(180deg, rgba(120, 200, 230, 0.06), rgba(0, 0, 0, 0) 34%);
 }
 
 .glass {
   padding: 1.5rem;
   margin: 1.5rem 0;
+  box-shadow: 0 8px 32px rgba(2, 12, 18, 0.35);
 }
 
 .glass-strong {
   background: var(--glass-fill-strong);
   border-color: var(--glass-border-strong);
-  box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(120, 200, 230, 0.16);
+  box-shadow: 0 10px 40px rgba(2, 12, 18, 0.45);
 }
 
 /* --- Blockquote ------------------------------------------- */
@@ -293,14 +292,11 @@ pre {
   padding: 1.1rem 1.25rem;
   overflow-x: auto;
   margin: 1.5rem 0;
-  box-shadow: inset 0 0 24px rgba(127, 212, 232, 0.05),
-    inset 0 1px 0 rgba(120, 200, 230, 0.1);
   background-image:
     /* faint scanlines */
     repeating-linear-gradient(180deg,
       rgba(127, 212, 232, 0.03) 0 1px,
-      transparent 1px 3px),
-    linear-gradient(180deg, rgba(127, 212, 232, 0.04), rgba(0, 0, 0, 0) 40%);
+      transparent 1px 3px);
 }
 
 code {
