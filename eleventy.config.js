@@ -10,6 +10,10 @@ export default function (eleventyConfig) {
     description: "A static blog built with Eleventy.",
   });
   eleventyConfig.addPassthroughCopy("src/css");
+  eleventyConfig.addPassthroughCopy("src/js");
+  eleventyConfig.addPassthroughCopy({
+    "node_modules/three/build": "js/vendor",
+  });
   eleventyConfig.addCollection("posts", (collectionApi) => {
     return collectionApi
       .getFilteredByGlob("src/posts/*.md")

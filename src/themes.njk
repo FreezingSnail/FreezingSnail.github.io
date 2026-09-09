@@ -1,0 +1,55 @@
+---
+layout: base.njk
+theme: theme-kelp-glass
+title: Kelp glass · wobpager
+description: Low-poly kelp forest studies for the glass themes.
+---
+
+<section class="kelp-demo" data-kelp-demo>
+  <header class="demo-hero">
+    <p class="eyebrow">/ Live background study</p>
+    <h1>Low-poly kelp<br>under glass.</h1>
+    <p class="hero-copy">One lightweight WebGL canopy, slowly moving beneath readable frosted surfaces.</p>
+    <div class="demo-switch" role="group" aria-label="Choose a glass treatment">
+      <button class="mode-button" type="button" data-theme="theme-kelp-glass" aria-pressed="true">Kelp glass</button>
+      <button class="mode-button" type="button" data-theme="theme-kelp-lagoon" aria-pressed="false">Lagoon glass</button>
+      <button class="mode-button" type="button" data-blur-toggle aria-pressed="false">Sharpen background</button>
+    </div>
+  </header>
+
+  <article class="demo-pane">
+    <p class="meta-label">/ Scene parameters</p>
+    <dl class="scene-spec">
+      <div><dt>Canopy</dt><dd>108 segmented blades · 3 depth bands</dd></div>
+      <div><dt>Current</dt><dd>30fps cap · individual sway</dd></div>
+      <div><dt>Fallback</dt><dd>Blurred kelp photograph · reduced-motion static frame</dd></div>
+    </dl>
+  </article>
+</section>
+
+<script>
+  (() => {
+    const root = document.querySelector("[data-kelp-demo]");
+    if (!root) return;
+
+    const themes = ["theme-kelp-glass", "theme-kelp-lagoon"];
+    root.querySelectorAll("[data-theme]").forEach((button) => {
+      button.addEventListener("click", () => {
+        document.documentElement.classList.remove(...themes);
+        document.documentElement.classList.add(button.dataset.theme);
+        root.querySelectorAll("[data-theme]").forEach((control) => {
+          control.setAttribute("aria-pressed", String(control === button));
+        });
+        document.dispatchEvent(new Event("kelp-theme-change"));
+      });
+    });
+
+    const blurToggle = root.querySelector("[data-blur-toggle]");
+    blurToggle?.addEventListener("click", () => {
+      const sharpened = document.documentElement.classList.toggle("scene-inspection");
+      blurToggle.setAttribute("aria-pressed", String(sharpened));
+      blurToggle.textContent = sharpened ? "Blur background" : "Sharpen background";
+    });
+  })();
+</script>
+<script type="module" src="/js/kelp-background.js"></script>

@@ -4,20 +4,24 @@ title: wobpager
 description: A static blog built with Eleventy.
 ---
 
-<h1>wobpager</h1>
+<header class="index-hero">
+  <p class="eyebrow">/ Index</p>
+  <h1>wobpager</h1>
+  <p class="hero-copy">Notes from beneath the surface.</p>
+</header>
 
 {% if collections.posts | length %}
-  <ul class="post-list">
+  <ul class="post-list" aria-label="Posts">
     {% for post in collections.posts %}
-      <li class="glass">
-        <h2>
-          <a href="{{ post.url }}">{{ post.data.title }}</a>
-          <time class="post-date" datetime="{{ post.date.toISOString() }}">{{ post.date.toISOString().split('T')[0] }}</time>
-        </h2>
-        {% if post.data.description %}<p class="post-description">{{ post.data.description }}</p>{% endif %}
+      <li class="post-row">
+        <time class="post-date" datetime="{{ post.date.toISOString() }}">{{ post.date.toISOString().split('T')[0] }}</time>
+        <div>
+          <h2><a href="{{ post.url }}">{{ post.data.title }}</a></h2>
+          {% if post.data.description %}<p class="post-description">{{ post.data.description }}</p>{% endif %}
+        </div>
       </li>
     {% endfor %}
   </ul>
 {% else %}
-  <p class="glass">No posts yet. Check back soon.</p>
+  <p class="empty-state">No posts yet. Check back soon.</p>
 {% endif %}

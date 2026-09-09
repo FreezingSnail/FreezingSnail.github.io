@@ -1,18 +1,23 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="{{ theme | default("theme-kelp-glass") }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ title | default("wobpager") }}</title>
   {% if description %}<meta name="description" content="{{ description }}">{% endif %}
   <link rel="stylesheet" href="/css/main.css">
+  <script type="importmap">
+    { "imports": { "three": "/js/vendor/three.module.js" } }
+  </script>
 </head>
 <body>
-  <nav>
-    <a href="/">Home</a>
+  <nav class="site-nav" aria-label="Primary navigation">
+    <a href="/">wobpager</a>
     <a href="/about/">About</a>
+    <a href="/themes/">Themes</a>
+    <a href="/kelp-studies/">Kelp studies</a>
   </nav>
-  <main>
+  <main class="site-main">
     {{ content | safe }}
   </main>
 </body>

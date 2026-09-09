@@ -2,67 +2,56 @@
 layout: base.njk
 ---
 <style>
-/* Prism token palette — cyan/orange terminal, matches Theme v3 */
+/* Syntax remains intentionally more colorful than prose for fast code scanning. */
 pre code .token.comment,
 pre code .token.prolog,
 pre code .token.doctype,
 pre code .token.cdata {
-  color: var(--term-dim, #7fb9c4);
+  color: var(--term-dim);
   font-style: italic;
 }
-pre code .token.punctuation {
-  color: var(--term-text, #cfe8f5);
-}
+pre code .token.punctuation { color: var(--term-text); }
 pre code .token.property,
 pre code .token.tag,
 pre code .token.constant,
 pre code .token.symbol,
-pre code .token.deleted {
-  color: var(--aqua-bright, #7fd4e8);
-}
+pre code .token.deleted { color: var(--aqua-bright); }
 pre code .token.boolean,
-pre code .token.number {
-  color: #f59e6b;
-}
+pre code .token.number { color: #f59e6b; }
 pre code .token.selector,
 pre code .token.attr-name,
 pre code .token.string,
 pre code .token.char,
 pre code .token.builtin,
-pre code .token.inserted {
-  color: #9fe8d8;
-}
+pre code .token.inserted { color: #9fe8d8; }
 pre code .token.operator,
 pre code .token.entity,
-pre code .token.url {
-  color: #b5e8f0;
-}
+pre code .token.url { color: #b5e8f0; }
 pre code .token.atrule,
 pre code .token.attr-value,
-pre code .token.keyword {
-  color: #4fd1c5;
-}
+pre code .token.keyword { color: #4fd1c5; }
 pre code .token.function,
-pre code .token.class-name {
-  color: #ffb380;
-}
+pre code .token.class-name { color: #ffb380; }
 pre code .token.regex,
 pre code .token.important,
-pre code .token.variable {
-  color: #ff6b5e;
-}
+pre code .token.variable { color: #ff6b5e; }
 pre code .token.important,
-pre code .token.bold {
-  font-weight: bold;
-}
-pre code .token.italic {
-  font-style: italic;
-}
+pre code .token.bold { font-weight: bold; }
+pre code .token.italic { font-style: italic; }
 </style>
-<article>
-  <h1>{{ title }}</h1>
-  {% if date %}<time datetime="{{ date }}">{{ date }}</time>{% endif %}
-  {% if description %}<p class="post-description">{{ description }}</p>{% endif %}
-  {{ content | safe }}
-  <p><a href="/">← Back to home</a></p>
+<article class="post">
+  <header class="post-header">
+    <div class="post-meta">
+      <p class="meta-label">/ Entry</p>
+      {% if date %}<time datetime="{{ date }}">{{ date }}</time>{% endif %}
+    </div>
+    <h1 class="post-title">{{ title }}</h1>
+    {% if description %}<p class="post-description">{{ description }}</p>{% endif %}
+  </header>
+  <div class="post-body">
+    {{ content | safe }}
+  </div>
+  <footer class="post-footer">
+    <a href="/">← Back to index</a>
+  </footer>
 </article>
