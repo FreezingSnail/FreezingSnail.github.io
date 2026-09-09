@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import { ps1Snap } from "./ps1.js";
 
-const FRAME_INTERVAL = 1000 / 24;
 const WATER = 0x061127;
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
@@ -247,6 +246,8 @@ function whaleModel() {
 function mantaModel() {
   const material = skin(SKIN.manta);
   const group = new THREE.Group();
+  // Natural world orientation: nose +X, wings span XZ, back +Y, stomach -Y.
+  // Scene sprites use an overhead camera for this model so its broad plane reads.
   group.add(mesh(hullGeometry([
     [-0.95, 0.06, 0.08],
     [-0.5, 0.2, 0.36],
@@ -507,13 +508,9 @@ function stage(canvas, options = {}) {
 function run(canvas, options, build) {
   const view = stage(canvas, options);
   const update = build(view.scene, view.camera);
-  let last = 0;
   function frame(time) {
-    if (time - last >= FRAME_INTERVAL) {
-      update(time);
-      view.render();
-      last = time;
-    }
+    update(time);
+    view.render();
     if (!reducedMotion.matches) requestAnimationFrame(frame);
   }
   view.resize();
@@ -551,19 +548,26 @@ function schoolStudy(canvas) {
         carrier,
         lane: index % 2 ? 1 : -1,
         phase: Math.random() * Math.PI * 2,
+        cruise: random(0.03, 0.05),
+        burst: 0,
+        nextBurst: Math.random() * 6000,
         velocity: new THREE.Vector3(random(0.02, 0.06), random(-0.01, 0.01), random(-0.02, 0.02)),
       };
     });
     const separation = new THREE.Vector3();
     const alignment = new THREE.Vector3();
     const cohesion = new THREE.Vector3();
+    let last;
 
     return (time) => {
+      const dt = last === undefined ? 1 : Math.min(Math.max((time - last) / 16.67, 0.2), 3);
+      last = time;
       const pulse = 0.5 - Math.cos(time * 0.00042) * 0.5;
       const split = pulse * pulse * (3 - 2 * pulse);
       boids.forEach((boid) => {
         separation.set(0, 0, 0); alignment.set(0, 0, 0); cohesion.set(0, 0, 0);
         let neighbours = 0;
+        let alarm = 0;
         boids.forEach((other) => {
           if (other === boid) return;
           const distance = boid.carrier.position.distanceTo(other.carrier.position);
@@ -571,27 +575,41 @@ function schoolStudy(canvas) {
           neighbours += 1;
           alignment.add(other.velocity);
           cohesion.add(other.carrier.position);
+          if (other.burst > 0.55 && distance < 1.2) alarm += 1;
           if (distance < 0.62 && distance > 0.001) {
             separation.addScaledVector(boid.carrier.position.clone().sub(other.carrier.position), 1 / (distance * distance));
           }
         });
         if (neighbours) {
-          alignment.divideScalar(neighbours).sub(boid.velocity).multiplyScalar(0.06);
-          cohesion.divideScalar(neighbours).sub(boid.carrier.position).multiplyScalar(0.0016);
-          boid.velocity.add(alignment).add(cohesion).addScaledVector(separation, 0.0022);
+          alignment.divideScalar(neighbours).sub(boid.velocity).multiplyScalar(0.06 * dt);
+          cohesion.divideScalar(neighbours).sub(boid.carrier.position).multiplyScalar(0.0016 * dt);
+          boid.velocity.add(alignment).add(cohesion).addScaledVector(separation, 0.0022 * dt);
         }
+        // Burst-and-glide: kick hard, then coast. Kicks spread to close neighbours
+        // so the school surges and settles instead of cruising at one speed.
+        if (boid.burst < 0.2 && time > boid.nextBurst) {
+          boid.burst = 1;
+          boid.nextBurst = time + 2000 + Math.random() * 6500;
+        } else if (alarm && boid.burst < 0.4 && Math.random() < 0.05 * dt) {
+          boid.burst = 0.85;
+        }
+        boid.burst *= Math.pow(0.982, dt);
+        const target = boid.cruise * (1 + boid.burst * 2.6);
+        const response = boid.burst > 0.3 ? 0.14 : 0.035;
         const laneY = boid.lane * split * 1.15 + Math.sin(time * 0.001 + boid.phase) * 0.3;
-        boid.velocity.x += (0.05 + Math.sin(time * 0.0007 + boid.phase) * 0.02 - boid.velocity.x) * 0.05;
-        boid.velocity.y += (laneY - boid.carrier.position.y) * 0.0022;
-        boid.velocity.z += (Math.sin(time * 0.00055 + boid.phase * 1.7) * 1.4 - boid.carrier.position.z) * 0.0016;
+        boid.velocity.x += (target + Math.sin(time * 0.0007 + boid.phase) * 0.015 - boid.velocity.x) * response * dt;
+        boid.velocity.y += (laneY - boid.carrier.position.y) * 0.0022 * dt;
+        boid.velocity.z += (Math.sin(time * 0.00055 + boid.phase * 1.7) * 1.4 - boid.carrier.position.z) * 0.0016 * dt;
         const speed = boid.velocity.length();
-        if (speed > 0.1) boid.velocity.multiplyScalar(0.1 / speed);
-        boid.carrier.position.add(boid.velocity);
+        const cap = target * 1.3 + 0.02;
+        if (speed > cap) boid.velocity.multiplyScalar(cap / speed);
+        boid.carrier.position.addScaledVector(boid.velocity, dt);
         if (boid.carrier.position.x > bounds.x + 0.4) boid.carrier.position.x = -bounds.x - 0.4;
         if (boid.carrier.position.x < -bounds.x - 0.4) boid.carrier.position.x = bounds.x + 0.4;
         boid.carrier.rotation.y = Math.atan2(-boid.velocity.z, boid.velocity.x);
         boid.carrier.rotation.z = Math.asin(THREE.MathUtils.clamp(boid.velocity.y / Math.max(speed, 0.001), -1, 1));
-        boid.model.animate(time, 1.6);
+        // Tail beat tracks effort, so a burst visibly thrashes and a glide relaxes.
+        boid.model.animate(time, 1.1 + boid.burst * 2.2);
       });
     };
   });
@@ -668,11 +686,24 @@ const STUDY_BUILDERS = {
     root.add(model.group);
     return [model];
   }),
-  manta: (canvas) => turntable(canvas, { position: [1.6, 1.8, 6.4], fov: 40 }, (root) => {
+  manta: (canvas) => run(canvas, { position: [0.5, 1.15, 6.2], target: [0, 0, 0], fov: 40 }, (scene) => {
     const model = mantaModel();
     model.group.scale.setScalar(1.15);
-    root.add(model.group);
-    return [model];
+    // The card camera looks through +Z; tip the natural XZ wing plane toward it.
+    const plane = new THREE.Group();
+    plane.rotation.x = Math.PI / 2;
+    plane.add(model.group);
+    const orient = new THREE.Group();
+    orient.rotation.z = Math.PI / 2;
+    orient.add(plane);
+    scene.add(orient);
+    return (time) => {
+      // A shallow bank rather than the shared turntable: a full spin would swing
+      // the wing plane edge-on for most of its travel.
+      orient.rotation.y = Math.sin(time * 0.00022) * 0.24;
+      orient.rotation.x = Math.sin(time * 0.00031) * 0.1;
+      model.animate(time);
+    };
   }),
   shark: (canvas) => turntable(canvas, { position: [1.4, 1.2, 6.6], fov: 40 }, (root) => {
     const model = sharkModel();

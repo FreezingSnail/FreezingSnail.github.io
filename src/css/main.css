@@ -960,6 +960,35 @@ html.has-webgl-kelp body::after {
   margin-top: var(--space-5);
 }
 
+.scene-picker {
+  display: grid;
+  gap: 0.35rem;
+  width: min(100%, 17rem);
+  margin-top: var(--space-3);
+  color: var(--text-muted);
+  font-family: var(--font-head);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.scene-picker select {
+  min-height: 2.5rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 0;
+  background: hsl(60 45% 97% / 0.22);
+  color: var(--text);
+  font: inherit;
+  letter-spacing: inherit;
+  padding-inline: 0.65rem;
+}
+
+.scene-picker select:focus-visible {
+  outline: 2px solid var(--accent-warm);
+  outline-offset: 3px;
+}
+
 .mode-button {
   min-height: 2.5rem;
   padding: 0.5rem 0.8rem;

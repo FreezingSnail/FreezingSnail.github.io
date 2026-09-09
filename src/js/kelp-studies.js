@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import { ps1Snap, ps1Step } from "./ps1.js";
 
-const FRAME_INTERVAL = 1000 / 24;
 const palette = [0x10182d, 0x1b2d5c, 0x3156a3, 0x426fc4];
 
 function random(min, max) {
@@ -264,11 +263,11 @@ function startStudy(canvas) {
   render(0);
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let last = 0;
+  // Rendered every frame: the PS1 read comes from snapped vertices and stepped
+  // sway values, so throttling the loop only added lag.
   function tick(time) {
-    if (time - last >= FRAME_INTERVAL) {
-      render(time);
-      last = time;
-    }
+    last = time;
+    render(time);
     if (!reducedMotion.matches) requestAnimationFrame(tick);
   }
   if (!reducedMotion.matches) requestAnimationFrame(tick);
