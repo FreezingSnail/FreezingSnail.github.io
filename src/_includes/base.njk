@@ -6,22 +6,22 @@
   <style>html,body{background:#3f6250}</style>
   <title>{{ title | default("wobpager") }}</title>
   {% if description %}<meta name="description" content="{{ description }}">{% endif %}
-  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="{{ "/css/main.css" | url }}">
   <script type="importmap">
-    { "imports": { "three": "/js/vendor/three.module.js" } }
+    { "imports": { "three": "{{ "/js/vendor/three.module.js" | url }}" } }
   </script>
 </head>
 <body data-kelp-demo>
   <nav class="site-nav" aria-label="Primary navigation">
-    <a href="/">wobpager</a>
-    <a href="/about/">About</a>
-    <a href="/themes/">Themes</a>
+    <a href="{{ "/" | url }}">wobpager</a>
+    <a href="{{ "/about/" | url }}">About</a>
+    <a href="{{ "/themes/" | url }}">Themes</a>
     {% include "palette-switcher.njk" %}
   </nav>
   <main class="site-main">
     {{ content | safe }}
   </main>
-  <script type="module" src="/js/kelp-background.js"></script>
-  <script type="module" src="/js/theme-switcher.js"></script>
+  <script type="module" src="{{ "/js/kelp-background.js" | url }}"></script>
+  <script type="module" src="{{ "/js/theme-switcher.js" | url }}"></script>
 </body>
 </html>

@@ -6,7 +6,7 @@ export default function (eleventyConfig) {
   });
   eleventyConfig.addGlobalData("site", {
     name: "wobpager",
-    url: "https://example.github.io/wobpager/",
+    url: "https://freezingsnail.github.io/wobpager/",
     description: "A static blog built with Eleventy.",
   });
   eleventyConfig.addPassthroughCopy("src/css");
@@ -25,5 +25,6 @@ export default function (eleventyConfig) {
       input: "src",
       output: "_site",
     },
+    pathPrefix: process.env.GITHUB_ACTIONS ? "/wobpager/" : "/",
   };
 }
