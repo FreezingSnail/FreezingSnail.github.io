@@ -1047,8 +1047,8 @@ html.scene-inspection .mode-button {
 
 /* Background inspection affects scenery only; glass-pane blur remains part of the material test. */
 .kelp-background {
-  filter: blur(3px);
-  transform: scale(1.02);
+  filter: blur(4px);
+  transform: scale(1.025);
   transition: filter 0.18s ease, transform 0.18s ease;
 }
 
@@ -1253,4 +1253,37 @@ svg.kelp-study-canvas { background: none; }
     linear-gradient(152deg, transparent 42%, #6494ee 43% 47%, transparent 48%),
     linear-gradient(28deg, transparent 59%, #3e70c8 60% 64%, transparent 65%),
     linear-gradient(152deg, transparent 68%, #2b59aa 69% 73%, transparent 74%);
+}
+
+.scene-study-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  color: var(--text-faint);
+  font-size: 0.8rem;
+}
+
+.scene-study-toggle {
+  border: 1px solid var(--rule-strong);
+  padding: 0.45rem 0.7rem;
+  color: var(--aqua-bright);
+  background: hsl(219 60% 12%);
+  font: inherit;
+  cursor: pointer;
+}
+
+.scene-study-toggle[aria-pressed="true"] {
+  color: hsl(221 58% 10%);
+  background: var(--aqua-bright);
+}
+
+.scene-study-card,
+.scene-study-page .kelp-study-card {
+  isolation: isolate;
+}
+
+html.scene-study-blur .scene-study-page .kelp-study-canvas {
+  filter: blur(3px) saturate(0.8) brightness(0.92);
+  transform: scale(1.025);
 }
