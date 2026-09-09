@@ -1,8 +1,9 @@
 <!doctype html>
-<html lang="en" class="{{ theme | default("theme-kelp-glass") }}">
+<html lang="en" class="{{ theme | default("theme-kelp-light") }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>html,body{background:#3f6250}</style>
   <title>{{ title | default("wobpager") }}</title>
   {% if description %}<meta name="description" content="{{ description }}">{% endif %}
   <link rel="stylesheet" href="/css/main.css">
@@ -10,17 +11,17 @@
     { "imports": { "three": "/js/vendor/three.module.js" } }
   </script>
 </head>
-<body>
+<body data-kelp-demo>
   <nav class="site-nav" aria-label="Primary navigation">
     <a href="/">wobpager</a>
     <a href="/about/">About</a>
     <a href="/themes/">Themes</a>
-    <a href="/kelp-studies/">Kelp studies</a>
-    <a href="/sea-life-studies/">Sea life studies</a>
-    <a href="/underwater-scenes/">Scene studies</a>
+    {% include "palette-switcher.njk" %}
   </nav>
   <main class="site-main">
     {{ content | safe }}
   </main>
+  <script type="module" src="/js/kelp-background.js"></script>
+  <script type="module" src="/js/theme-switcher.js"></script>
 </body>
 </html>

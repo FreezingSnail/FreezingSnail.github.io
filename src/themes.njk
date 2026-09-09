@@ -10,12 +10,7 @@ description: Low-poly kelp forest studies across sea-light palettes.
     <p class="eyebrow">/ Live theme studies</p>
     <h1>Kelp worlds<br>under glass.</h1>
     <p class="hero-copy">One shared underwater scene renderer, evaluated through light, dark, and regional sea palettes beneath readable frosted surfaces.</p>
-    <div class="demo-switch" role="group" aria-label="Choose a sea palette">
-      <button class="mode-button" type="button" data-theme="theme-kelp-light" aria-pressed="true">Kelp light</button>
-      <button class="mode-button" type="button" data-theme="theme-kelp-dark" aria-pressed="false">Kelp dark</button>
-      <button class="mode-button" type="button" data-theme="theme-tidepool" aria-pressed="false">Tidepool</button>
-      <button class="mode-button" type="button" data-theme="theme-sunlit" aria-pressed="false">Sunlit reef</button>
-      <button class="mode-button" type="button" data-theme="theme-nightwatch" aria-pressed="false">Nightwatch</button>
+    <div class="demo-switch">
       <button class="mode-button" type="button" data-blur-toggle aria-pressed="false">Sharpen background</button>
     </div>
     <label class="scene-picker">Forest study
@@ -44,18 +39,6 @@ description: Low-poly kelp forest studies across sea-light palettes.
     const root = document.querySelector("[data-kelp-demo]");
     if (!root) return;
 
-    const themes = Array.from(root.querySelectorAll("[data-theme]"), (button) => button.dataset.theme);
-    root.querySelectorAll("[data-theme]").forEach((button) => {
-      button.addEventListener("click", () => {
-        document.documentElement.classList.remove(...themes);
-        document.documentElement.classList.add(button.dataset.theme);
-        root.querySelectorAll("[data-theme]").forEach((control) => {
-          control.setAttribute("aria-pressed", String(control === button));
-        });
-        document.dispatchEvent(new Event("kelp-theme-change"));
-      });
-    });
-
     const blurToggle = root.querySelector("[data-blur-toggle]");
     blurToggle?.addEventListener("click", () => {
       const sharpened = document.documentElement.classList.toggle("scene-inspection");
@@ -64,4 +47,3 @@ description: Low-poly kelp forest studies across sea-light palettes.
     });
   })();
 </script>
-<script type="module" src="/js/kelp-background.js"></script>

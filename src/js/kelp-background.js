@@ -12,7 +12,6 @@ function startKelpDemo() {
   const canvas = document.createElement("canvas");
   canvas.className = "kelp-background";
   document.body.prepend(canvas);
-  document.documentElement.classList.add("has-webgl-kelp");
 
   const selector = document.querySelector("[data-demo-scene-select]");
   let active = Math.floor(Math.random() * UNDERWATER_SCENES.length);
@@ -22,6 +21,7 @@ function startKelpDemo() {
     document.querySelector("[data-demo-scene-name]")?.replaceChildren(`${sceneNames[scene]} · random rotation every 18s`);
   };
   const renderer = startUnderwaterScene(canvas, UNDERWATER_SCENES[active], showSceneName, { worldExtent: 3.8, lifeScale: 1, boidDensity: 1.55, animalScale: 0.36, grounded: false });
+  document.documentElement.classList.add("has-webgl-kelp");
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let frame;
 
