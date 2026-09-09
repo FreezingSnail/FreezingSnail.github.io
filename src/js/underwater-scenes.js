@@ -37,6 +37,47 @@ const speciesMix = {
   "open-forest": ["giant", "palm", "ribbon", "whip", "sheet"],
 };
 const bladeColors = kelpSpecies.ribbon;
+
+const SCENE_THEME_PALETTES = {
+  "theme-kelp-light": { water: ["hsl(153 29% 69%)", "hsl(166 35% 48%)", "hsl(171 38% 30%)"], motes: "hsl(65 58% 90%)", hue: -4, saturation: 0.8, lightness: 8 },
+  "theme-kelp-dark": { water: ["hsl(161 35% 25%)", "hsl(167 42% 16%)", "hsl(174 48% 8%)"], motes: "hsl(151 43% 70%)", hue: 2, saturation: 0.9, lightness: -18 },
+  "theme-tidepool": { water: ["hsl(191 48% 76%)", "hsl(188 54% 54%)", "hsl(193 51% 34%)"], motes: "hsl(193 82% 95%)", hue: 28, saturation: 0.9, lightness: 4 },
+  "theme-sunlit": { water: ["hsl(194 74% 84%)", "hsl(198 66% 61%)", "hsl(204 56% 38%)"], motes: "hsl(50 91% 96%)", hue: -12, saturation: 1.08, lightness: 12 },
+  "theme-nightwatch": { water: ["hsl(203 52% 22%)", "hsl(212 57% 13%)", "hsl(222 65% 6%)"], motes: "hsl(190 86% 82%)", hue: 48, saturation: 0.82, lightness: -12 },
+};
+
+function shiftedColor(hex, hueShift, saturation, lightness) {
+  const value = Number.parseInt(hex.slice(1), 16);
+  const red = ((value >> 16) & 255) / 255; const green = ((value >> 8) & 255) / 255; const blue = (value & 255) / 255;
+  const high = Math.max(red, green, blue); const low = Math.min(red, green, blue); const spread = high - low;
+  let hue = 0;
+  if (spread) {
+    if (high === red) hue = ((green - blue) / spread) % 6;
+    else if (high === green) hue = (blue - red) / spread + 2;
+    else hue = (red - green) / spread + 4;
+    hue *= 60;
+  }
+  if (hue < 0) hue += 360;
+  const level = (high + low) / 2;
+  const baseSaturation = spread ? spread / (1 - Math.abs(2 * level - 1)) : 0;
+  const themedHue = Math.round((hue + hueShift + 360) % 360);
+  const themedSaturation = Math.round(Math.min(Math.max(baseSaturation * saturation * 100, 0), 100));
+  const themedLightness = Math.round(Math.min(Math.max(level * 100 + lightness, 0), 100));
+  return `hsl(${themedHue} ${themedSaturation}% ${themedLightness}%)`;
+}
+
+function scenePalette() {
+  const root = document.documentElement.classList;
+  const key = Object.keys(SCENE_THEME_PALETTES).find((theme) => root.contains(theme));
+  const config = key ? SCENE_THEME_PALETTES[key] : { water: ["#78ad95", "#3a7b6c", "#1d554f"], motes: "#8fc8a8", hue: 0, saturation: 1, lightness: 0 };
+  return {
+    key: key ?? "scene-default",
+    water: config.water,
+    motes: config.motes,
+    kelp: Object.fromEntries(Object.entries(kelpSpecies).map(([form, colors]) => [form, colors.map((color) => shiftedColor(color, config.hue, config.saturation, config.lightness))])),
+  };
+}
+
 export const UNDERWATER_SCENES = Object.freeze(Object.keys(speciesMix));
 
 function polygon(ctx, points, color) {
@@ -57,14 +98,14 @@ function fit(canvas) {
   return { ctx, width: bounds.width, height: bounds.height, ratio };
 }
 
-function water(ctx, width, height) {
+function water(ctx, width, height, palette) {
   const gradient = ctx.createLinearGradient(0, 0, 0, height);
-  gradient.addColorStop(0, "#78ad95");
-  gradient.addColorStop(0.52, "#3a7b6c");
-  gradient.addColorStop(1, "#1d554f");
+  gradient.addColorStop(0, palette.water[0]);
+  gradient.addColorStop(0.52, palette.water[1]);
+  gradient.addColorStop(1, palette.water[2]);
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, width, height);
-  ctx.fillStyle = "#8fc8a8";
+  ctx.fillStyle = palette.motes;
   for (let x = 9; x < width; x += 37) for (let y = (x * 11) % 41; y < height; y += 47) ctx.fillRect(x, y, 1, 1);
 }
 
@@ -193,7 +234,7 @@ function holdfast(ctx, x, y, size, colors) {
 }
 
 /** Sweeping surface light. Cheap, and it keeps the whole frame moving. */
-function lightShafts(ctx, width, height, time) {
+function lightShafts(ctx, width, height, time, palette) {
   ctx.save();
   ctx.globalCompositeOperation = "lighter";
   ctx.globalAlpha = 0.05;
@@ -204,7 +245,7 @@ function lightShafts(ctx, width, height, time) {
     polygon(ctx, [
       [topX, -4], [topX + spread, -4],
       [topX + spread * 2.4 + height * 0.24, height], [topX + spread * 0.6 + height * 0.24, height],
-    ], "#bfe6cf");
+    ], palette.motes);
   }
   ctx.restore();
 }
@@ -350,10 +391,10 @@ function forestLayer(ctx, scene, width, height, time, layer, settings) {
     const folded = depth > 0 && bladeWidth >= 6;
     const structureRootY = rootY - height * structureReach * (0.72 + variation * 0.4);
     if (structureReach > 0) {
-      ribbon(ctx, x, rootY, rootY - structureRootY, Math.max(bladeWidth * 0.16, 1.4), (variation - 0.5) * 18, time, index + depth, 0.35 + depth * 0.18, kelpSpecies.feather, false);
+      ribbon(ctx, x, rootY, rootY - structureRootY, Math.max(bladeWidth * 0.16, 1.4), (variation - 0.5) * 18, time, index + depth, 0.35 + depth * 0.18, settings.palette.kelp.feather, false);
     }
     const form = mix[(index + depth * 2) % mix.length];
-    const colors = kelpSpecies[form] ?? kelpSpecies.ribbon;
+    const colors = settings.palette.kelp[form] ?? settings.palette.kelp.ribbon;
     if (depth > 0 && grows && structureReach === 0) holdfast(ctx, x, rootY, bladeWidth * 0.7, colors);
     if (form === "ribbon") ribbon(ctx, x, structureRootY, length, bladeWidth, (variation - 0.5) * 48, time, index + depth, 0.45 + depth * 0.3, colors, folded);
     else if (form === "fan") fan(ctx, x, structureRootY, length, bladeWidth, time, index + depth, colors, folded);
@@ -366,7 +407,7 @@ function forestLayer(ctx, scene, width, height, time, layer, settings) {
     if ((scene === "grove" || scene === "aisle") && depth > 0) {
       for (let leaf = 0; leaf < 5; leaf += 1) {
         const y = structureRootY - length * (0.2 + leaf * 0.14);
-        ribbon(ctx, x + (leaf % 2 ? 3 : -3), y, height * 0.13 * lengthScale, bladeWidth * 0.65, leaf % 2 ? 28 : -28, time, index + leaf + 1, 0.5 + depth * 0.2, kelpSpecies.feather, folded);
+        ribbon(ctx, x + (leaf % 2 ? 3 : -3), y, height * 0.13 * lengthScale, bladeWidth * 0.65, leaf % 2 ? 28 : -28, time, index + leaf + 1, 0.5 + depth * 0.2, settings.palette.kelp.feather, folded);
       }
     }
   }
@@ -383,20 +424,20 @@ function makeLayerCache() {
   return { canvas, ctx: canvas.getContext("2d"), key: "", drawnAt: -Infinity };
 }
 
-/** The water gradient and its mote field never change, so draw them once. */
-function refreshBackdrop(cache, width, height, ratio) {
-  const key = `${Math.round(width)}x${Math.round(height)}@${ratio}`;
+/** The water gradient and its mote field are cached per active scene palette. */
+function refreshBackdrop(cache, width, height, ratio, palette) {
+  const key = `${Math.round(width)}x${Math.round(height)}@${ratio}|${palette.key}`;
   if (cache.key === key) return;
   cache.canvas.width = Math.max(1, Math.round(width * ratio));
   cache.canvas.height = Math.max(1, Math.round(height * ratio));
   cache.key = key;
   cache.ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
-  water(cache.ctx, width, height);
+  water(cache.ctx, width, height, palette);
 }
 
 /** Redraw a fixed-position layer strip when its stepped sway becomes stale. */
 function refreshLayerCache(cache, scene, width, height, time, layer, settings, ratio, interval) {
-  const key = `${scene}|${Math.round(width)}x${Math.round(height)}@${ratio}`;
+  const key = `${scene}|${settings.palette.key}|${Math.round(width)}x${Math.round(height)}@${ratio}`;
   if (cache.key === key && time - cache.drawnAt < interval) return;
   const span = width * 1.4;
   if (cache.key !== key) {
@@ -624,6 +665,7 @@ export function startUnderwaterScene(canvas, initialScene = canvas.dataset.under
     kelpHeight,
     structureReach,
     grounded: options.grounded ?? true,
+    palette: scenePalette(),
   };
   let scene = initialScene;
   let state = fit(canvas);
@@ -657,9 +699,9 @@ export function startUnderwaterScene(canvas, initialScene = canvas.dataset.under
     const worldScale = 1 / Math.sqrt(worldExtent);
     const animal = rareAnimalState(width, height, time, rareLife, worldExtent, lifeScale, animalScale);
 
-    refreshBackdrop(backdrop, width, height, ratio);
+    refreshBackdrop(backdrop, width, height, ratio, settings.palette);
     ctx.drawImage(backdrop.canvas, 0, 0, width, height);
-    lightShafts(ctx, width, height, time);
+    lightShafts(ctx, width, height, time, settings.palette);
     refreshLayerCache(farCache, scene, width, height, time, "far", settings, ratio, 240);
     blitLayer(ctx, farCache, width, height);
     updateSchool(school, width, height, time, dt);
@@ -692,10 +734,25 @@ export function startUnderwaterScene(canvas, initialScene = canvas.dataset.under
     crawlers = makeCrawlers(state.width, worldExtent, lifeScale);
     if (reducedMotion.matches) render(0);
   };
+  const onThemeChange = () => {
+    const palette = scenePalette();
+    if (palette.key === settings.palette.key) return;
+    settings.palette = palette;
+    if (reducedMotion.matches) render(performance.now());
+  };
   window.addEventListener("resize", onResize);
+  document.addEventListener("kelp-theme-change", onThemeChange);
   onSceneChange?.(scene);
   render(0);
-  return { setScene, setRunning, destroy: () => { cancelAnimationFrame(frame); window.removeEventListener("resize", onResize); } };
+  return {
+    setScene,
+    setRunning,
+    destroy: () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("resize", onResize);
+      document.removeEventListener("kelp-theme-change", onThemeChange);
+    },
+  };
 }
 
 document.querySelectorAll("[data-underwater-scene]").forEach((canvas) => {

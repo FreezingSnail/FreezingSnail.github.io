@@ -532,7 +532,9 @@ html.theme-sunlit,
 }
 
 html.theme-kelp,
-.theme-preview.theme-kelp {
+html.theme-kelp-light,
+.theme-preview.theme-kelp,
+.theme-preview.theme-kelp-light {
   --field-deep: hsl(150 24% 54%);
   --field: hsl(52 41% 91%);
   --field-light: hsl(62 53% 96%);
@@ -555,6 +557,32 @@ html.theme-kelp,
   --water-filter: blur(34px) saturate(0.48) brightness(0.76) contrast(0.86);
   --water-opacity: 0.16;
   --water-vignette: hsl(159 25% 24% / 0.08);
+}
+
+html.theme-kelp-dark,
+.theme-preview.theme-kelp-dark {
+  --field-deep: hsl(165 48% 5%);
+  --field: hsl(163 39% 9%);
+  --field-light: hsl(161 35% 16%);
+  --surface: hsl(162 36% 12% / 0.86);
+  --surface-hover: hsl(161 40% 17% / 0.92);
+  --surface-strong: hsl(163 43% 9% / 0.96);
+  --rule: hsl(150 38% 74% / 0.25);
+  --rule-strong: hsl(151 47% 80% / 0.5);
+  --text: hsl(58 50% 96%);
+  --text-dim: hsl(81 25% 79%);
+  --text-faint: hsl(151 18% 62%);
+  --aqua: hsl(158 59% 60%);
+  --aqua-bright: hsl(159 73% 76%);
+  --accent-warm: hsl(42 92% 72%);
+  --term-bg: hsl(164 44% 7% / 0.97);
+  --term-border: hsl(155 42% 68% / 0.46);
+  --term-text: hsl(58 50% 96%);
+  --term-dim: hsl(151 24% 71%);
+  --water-veil: hsl(163 55% 6% / 0.68);
+  --water-filter: blur(32px) saturate(0.7) brightness(0.48) contrast(0.94);
+  --water-opacity: 0.38;
+  --water-vignette: hsl(166 57% 3% / 0.54);
 }
 
 html.theme-nightwatch,

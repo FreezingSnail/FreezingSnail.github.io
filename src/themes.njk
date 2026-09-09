@@ -1,18 +1,21 @@
 ---
 layout: base.njk
-theme: theme-kelp-glass
+theme: theme-kelp-light
 title: Kelp glass · wobpager
-description: Low-poly kelp forest studies for the glass themes.
+description: Low-poly kelp forest studies across sea-light palettes.
 ---
 
 <section class="kelp-demo" data-kelp-demo>
   <header class="demo-hero">
-    <p class="eyebrow">/ Live background study</p>
-    <h1>Low-poly kelp<br>under glass.</h1>
-    <p class="hero-copy">One lightweight WebGL canopy, slowly moving beneath readable frosted surfaces.</p>
-    <div class="demo-switch" role="group" aria-label="Choose a glass treatment">
-      <button class="mode-button" type="button" data-theme="theme-kelp-glass" aria-pressed="true">Kelp glass</button>
-      <button class="mode-button" type="button" data-theme="theme-kelp-lagoon" aria-pressed="false">Lagoon glass</button>
+    <p class="eyebrow">/ Live theme studies</p>
+    <h1>Kelp worlds<br>under glass.</h1>
+    <p class="hero-copy">One shared underwater scene renderer, evaluated through light, dark, and regional sea palettes beneath readable frosted surfaces.</p>
+    <div class="demo-switch" role="group" aria-label="Choose a sea palette">
+      <button class="mode-button" type="button" data-theme="theme-kelp-light" aria-pressed="true">Kelp light</button>
+      <button class="mode-button" type="button" data-theme="theme-kelp-dark" aria-pressed="false">Kelp dark</button>
+      <button class="mode-button" type="button" data-theme="theme-tidepool" aria-pressed="false">Tidepool</button>
+      <button class="mode-button" type="button" data-theme="theme-sunlit" aria-pressed="false">Sunlit reef</button>
+      <button class="mode-button" type="button" data-theme="theme-nightwatch" aria-pressed="false">Nightwatch</button>
       <button class="mode-button" type="button" data-blur-toggle aria-pressed="false">Sharpen background</button>
     </div>
     <label class="scene-picker">Forest study
@@ -41,7 +44,7 @@ description: Low-poly kelp forest studies for the glass themes.
     const root = document.querySelector("[data-kelp-demo]");
     if (!root) return;
 
-    const themes = ["theme-kelp-glass", "theme-kelp-lagoon"];
+    const themes = Array.from(root.querySelectorAll("[data-theme]"), (button) => button.dataset.theme);
     root.querySelectorAll("[data-theme]").forEach((button) => {
       button.addEventListener("click", () => {
         document.documentElement.classList.remove(...themes);
