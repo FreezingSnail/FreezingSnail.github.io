@@ -5,6 +5,7 @@ const sceneNames = {
   thicket: "Ribbon thicket", grove: "Giant kelp grove", canopy: "Canopy passage", clearing: "Forest clearing",
   wall: "Kelp wall", aisle: "Stipe aisle", tangle: "Ribbon tangle", deep: "Deep grove",
   "bulb-bed": "Bulb kelp bed", "feather-meadow": "Feather meadow", "fan-reef": "Fan reef", mosaic: "Species mosaic",
+  "tower-grove": "Tower grove", "palm-canopy": "Palm canopy", "giant-wall": "Giant wall", "open-forest": "Open forest",
 };
 
 function startKelpDemo() {
@@ -18,7 +19,7 @@ function startKelpDemo() {
   const showSceneName = (scene) => {
     document.querySelector("[data-demo-scene-name]")?.replaceChildren(`${sceneNames[scene]} · random rotation every 18s`);
   };
-  const renderer = startUnderwaterScene(canvas, UNDERWATER_SCENES[active], showSceneName, { worldExtent: 2.7 });
+  const renderer = startUnderwaterScene(canvas, UNDERWATER_SCENES[active], showSceneName, { worldExtent: 3.8, lifeScale: 1, boidDensity: 1.55, animalScale: 0.36 });
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let frame;
 
