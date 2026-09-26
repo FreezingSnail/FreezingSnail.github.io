@@ -4,6 +4,15 @@ export default function (eleventyConfig) {
   eleventyConfig.addPlugin(syntaxHighlight, {
     preAttributes: { tabindex: 0 },
   });
+  eleventyConfig.addFilter("dateEDT", (value) =>
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: "America/New_York",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }).format(value),
+  );
+
   eleventyConfig.addGlobalData("site", {
     name: "wobpager",
     url: "https://freezingsnail.github.io/wobpager/",

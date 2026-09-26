@@ -42,6 +42,10 @@ function startKelpDemo() {
     if (index >= 0) setScene(index);
   });
 
+  document.querySelector("[data-scene-rotate]")?.addEventListener("click", () => {
+    setScene(chooseScene());
+  });
+
   function tick(time) {
     frame = undefined;
     if (time >= nextChange) setScene(chooseScene(), time);

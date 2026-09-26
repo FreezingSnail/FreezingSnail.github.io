@@ -15,7 +15,7 @@ description: A static blog built with Eleventy.
   <ul class="post-list" aria-label="Posts">
     {% for post in collections.posts %}
       <li class="post-row">
-        <time class="post-date" datetime="{{ post.date.toISOString() }}">{{ post.date.toISOString().split('T')[0] }}</time>
+        <time class="post-date" datetime="{{ post.date.toISOString() }}">{{ post.date | dateEDT }}</time>
         <div>
           <h2><a href="{{ post.url | url }}">{{ post.data.title }}</a></h2>
           {% if post.data.description %}<p class="post-description">{{ post.data.description }}</p>{% endif %}

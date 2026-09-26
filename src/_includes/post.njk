@@ -43,7 +43,7 @@ pre code .token.italic { font-style: italic; }
   <header class="post-header">
     <div class="post-meta">
       <p class="meta-label">/ Entry</p>
-      {% if date %}<time datetime="{{ date }}">{{ date }}</time>{% endif %}
+      {% if date %}<time datetime="{{ date.toISOString() }}">{{ date | dateEDT }}</time>{% endif %}
     </div>
     <h1 class="post-title">{{ title }}</h1>
     {% if description %}<p class="post-description">{{ description }}</p>{% endif %}

@@ -27,8 +27,8 @@
   --space-4: 1.5rem;
   --space-5: 2.5rem;
   --space-6: 4rem;
-  --font-head: ui-monospace, "SF Mono", "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace;
-  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-head: "Fira Sans Nerd Font", "Fira Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-body: "Fira Sans Nerd Font", "Fira Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
 *,
@@ -1496,4 +1496,88 @@ html.scene-study-blur .scene-study-page .kelp-study-canvas {
 .has-webgl-kelp .site-nav {
   position: relative;
   z-index: 10;
+}
+
+/* A single frosted surface leaves the live kelp scene as the page's only subject. */
+body.glass-background-body {
+  overflow: hidden;
+}
+
+body.glass-background-body .site-main {
+  display: grid;
+  width: 100%;
+  min-height: 100vh;
+  padding: var(--space-4);
+  place-items: start center;
+}
+
+body.glass-background-body .kelp-background {
+  z-index: 0;
+  filter: blur(2px) saturate(1.12) brightness(1.14);
+  transform: scale(1.02);
+}
+
+body.glass-background-body .site-main {
+  z-index: 1;
+}
+
+.background-theme-picker {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+}
+
+.background-theme-picker .theme-menu {
+  position: relative;
+  max-width: none;
+  margin: 0;
+}
+
+.background-theme-picker .theme-menu-summary {
+  background: hsl(60 45% 97% / 0.84);
+}
+
+.background-theme-picker .palette-switcher-actions {
+  position: absolute;
+  top: calc(100% + 0.45rem);
+  left: 50%;
+  display: none;
+  width: 10.75rem;
+  padding: 0.4rem;
+  border: 1px solid var(--rule-strong);
+  background: hsl(60 45% 97% / 0.92);
+  box-shadow: 0 1rem 2.5rem hsl(160 42% 10% / 0.22);
+  transform: translateX(-50%);
+}
+
+.background-theme-picker .theme-menu[open] .palette-switcher-actions {
+  display: grid;
+}
+
+.background-theme-picker .mode-button {
+  width: 100%;
+  min-height: 2.2rem;
+  border-color: transparent;
+  background: transparent;
+  color: var(--text-dim);
+  text-align: left;
+}
+
+.background-theme-picker .mode-button:hover,
+.background-theme-picker .mode-button:focus-visible {
+  border-color: var(--rule);
+  background: var(--surface-hover);
+  color: var(--aqua-bright);
+}
+
+.background-theme-picker .mode-button[aria-pressed="true"] {
+  border-color: var(--aqua-bright);
+  background: var(--aqua-bright);
+  color: var(--surface-strong);
+}
+
+@media (max-width: 50rem) {
+  body.glass-background-body .site-main {
+    padding: var(--space-3);
+  }
 }
