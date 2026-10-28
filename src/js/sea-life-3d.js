@@ -1,8 +1,7 @@
 import * as THREE from "three";
-import { ps1Snap } from "./ps1.js";
+import { ps1Animate, ps1Resize, ps1Snap } from "./ps1.js";
 
 const WATER = 0x061127;
-const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 const SKIN = {
   fish: 0x3f74d0,
@@ -488,6 +487,7 @@ function particleField(count = 90, spread = 6) {
 function stage(canvas, options = {}) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: "low-power" });
   const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(WATER, 6, 22);
   const camera = new THREE.PerspectiveCamera(options.fov ?? 38, 1, 0.1, 60);
   renderer.setClearColor(WATER);
   renderer.setPixelRatio(1);
@@ -497,9 +497,7 @@ function stage(canvas, options = {}) {
 
   function resize() {
     const bounds = canvas.getBoundingClientRect();
-    renderer.setSize(Math.max(bounds.width, 1), Math.max(bounds.height, 1), false);
-    camera.aspect = Math.max(bounds.width, 1) / Math.max(bounds.height, 1);
-    camera.updateProjectionMatrix();
+    ps1Resize(renderer, scene, camera, bounds);
   }
 
   return { renderer, scene, camera, resize, render: () => renderer.render(scene, camera) };
@@ -511,12 +509,9 @@ function run(canvas, options, build) {
   function frame(time) {
     update(time);
     view.render();
-    if (!reducedMotion.matches) requestAnimationFrame(frame);
   }
   view.resize();
-  update(0);
-  view.render();
-  if (!reducedMotion.matches) requestAnimationFrame(frame);
+  ps1Animate(canvas, frame);
   window.addEventListener("resize", () => { view.resize(); view.render(); });
 }
 

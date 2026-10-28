@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { fishModel, fishParts, mantaModel, sharkModel, snailModel, whaleModel } from "./sea-life-3d.js";
+import { ps1SetRaster } from "./ps1.js";
 
 /**
  * Bridges the 3D sea-life models into the 2D Canvas scenes.
@@ -16,7 +17,7 @@ import { fishModel, fishParts, mantaModel, sharkModel, snailModel, whaleModel } 
  * camera. `interval` throttles pose rendering, so a pose is drawn once per frame
  * and then shared by every animal using it, across every scene canvas.
  */
-const TILE = 160;
+const TILE = 96;
 
 const SPECIES = {
   "fish-wedge": { radius: 1.8, span: 60, poses: 2, interval: 36, beat: 1.6 },
@@ -60,6 +61,9 @@ export function createSpriteBook() {
       const model = buildModel(kind, poseIndex);
       const carrier = new THREE.Group();
       carrier.add(model.group);
+      // Show the hull's thickness; rays need their XZ wing plane facing the tile.
+      carrier.rotation.set(kind === "manta" ? Math.PI / 2 - 0.18 : 0.12, -0.22, 0);
+      ps1SetRaster(carrier, TILE, TILE);
       const tile = document.createElement("canvas");
       tile.width = TILE;
       tile.height = TILE;

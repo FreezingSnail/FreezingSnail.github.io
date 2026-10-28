@@ -27,6 +27,7 @@
   --space-4: 1.5rem;
   --space-5: 2.5rem;
   --space-6: 4rem;
+  --content-inset: clamp(1.25rem, 4vw, 2.5rem);
   --font-head: "Fira Sans Nerd Font", "Fira Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-body: "Fira Sans Nerd Font", "Fira Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
@@ -118,6 +119,8 @@ body::after {
 
 .site-nav a {
   width: fit-content;
+  padding-block: 0.35rem;
+  border-bottom: 0;
   color: var(--aqua-bright);
   font-family: var(--font-head);
   font-size: 0.72rem;
@@ -137,10 +140,9 @@ body::after {
 
 .index-hero {
   position: relative;
-  display: grid;
-  grid-template-columns: 8rem minmax(0, 40rem);
-  column-gap: var(--space-3);
-  padding: var(--space-4) 0;
+  max-width: 50rem;
+  margin-inline: auto;
+  padding: var(--content-inset);
   overflow: hidden;
   border-block: 1px solid var(--rule);
 }
@@ -155,11 +157,6 @@ body::after {
   letter-spacing: 0.1em;
   line-height: 1.4;
   text-transform: uppercase;
-}
-
-.index-hero .eyebrow {
-  grid-column: 1;
-  padding-top: 0.55rem;
 }
 
 h1,
@@ -187,11 +184,6 @@ h3 {
   font-size: 1rem;
 }
 
-.index-hero h1,
-.index-hero .hero-copy {
-  grid-column: 2;
-}
-
 .hero-copy {
   max-width: 34rem;
   margin: var(--space-3) 0 0;
@@ -214,16 +206,16 @@ li {
 }
 
 .post-list {
-  max-width: 40rem;
-  margin: 0 0 0 calc(10rem + var(--space-3));
-  padding: 0;
+  max-width: 50rem;
+  margin: var(--space-4) auto 0;
+  padding: 0 var(--content-inset);
   list-style: none;
   border-top: 1px solid var(--rule);
 }
 
 .post-row {
   display: grid;
-  grid-template-columns: 7rem minmax(0, 1fr);
+  grid-template-columns: 9rem minmax(0, 1fr);
   gap: var(--space-3);
   margin: 0;
   padding: var(--space-4) 0;
@@ -385,8 +377,9 @@ pre code {
 }
 
 .empty-state {
-  max-width: 40rem;
-  margin-left: calc(10rem + var(--space-3));
+  max-width: 50rem;
+  margin: var(--space-4) auto 0;
+  padding-inline: var(--content-inset);
 }
 
 :focus-visible {
@@ -414,14 +407,10 @@ pre code {
     flex-basis: 100%;
   }
 
-  .index-hero,
   .post {
     grid-template-columns: 1fr;
   }
 
-  .index-hero .eyebrow,
-  .index-hero h1,
-  .index-hero .hero-copy,
   .post-meta,
   .post-title,
   .post-description,
@@ -430,18 +419,19 @@ pre code {
     grid-column: 1;
   }
 
-  .index-hero .eyebrow {
-    padding-top: 0;
-    margin-bottom: var(--space-2);
-  }
-
-  .post-list,
-  .empty-state {
-    margin-left: 0;
-  }
-
   .post-meta {
     margin-bottom: var(--space-3);
+  }
+}
+
+@media (max-width: 32rem) {
+  .post-row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-1);
+  }
+
+  .post-date {
+    padding-top: 0;
   }
 }
 
@@ -628,14 +618,6 @@ body::after {
   30%, 100% { opacity: 0; }
 }
 
-.site-nav {
-  grid-template-columns: minmax(8rem, 10rem) repeat(2, max-content) 1fr;
-}
-
-.site-nav a + a {
-  grid-column: auto;
-}
-
 .theme-hero {
   display: grid;
   grid-template-columns: 10rem minmax(0, 40rem);
@@ -757,7 +739,6 @@ body::after {
 
 @media (max-width: 50rem) {
   .site-nav {
-    grid-template-columns: 1fr auto auto;
     gap: var(--space-2);
   }
 
@@ -889,11 +870,17 @@ html.theme-kelp-lagoon .site-nav {
   backdrop-filter: blur(18px) saturate(1.15);
 }
 
-html.theme-kelp-glass .index-hero,
-html.theme-kelp-lagoon .index-hero,
 html.theme-kelp-glass .post,
 html.theme-kelp-lagoon .post {
   padding: var(--space-4);
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  -webkit-backdrop-filter: blur(18px) saturate(1.08);
+  backdrop-filter: blur(18px) saturate(1.08);
+}
+
+html.theme-kelp-glass .index-hero,
+html.theme-kelp-lagoon .index-hero {
   border: 1px solid var(--rule);
   background: var(--surface);
   -webkit-backdrop-filter: blur(18px) saturate(1.08);
@@ -946,7 +933,7 @@ html.has-webgl-kelp body::after {
 
 .has-webgl-kelp .index-hero,
 .has-webgl-kelp .post-list,
-.has-webgl-kelp .palette-switcher,
+.has-webgl-kelp .palette-switcher:not(.theme-menu),
 .has-webgl-kelp .post,
 .has-webgl-kelp .kelp-study-intro,
 .has-webgl-kelp .kelp-study-card,
@@ -963,12 +950,7 @@ html.has-webgl-kelp body::after {
   padding: clamp(1.25rem, 4vw, 2.5rem);
 }
 
-.has-webgl-kelp .post-list {
-  margin-top: var(--space-4);
-  padding-inline: var(--space-4);
-}
-
-.has-webgl-kelp .palette-switcher {
+.has-webgl-kelp .palette-switcher:not(.theme-menu) {
   padding: var(--space-3);
 }
 
@@ -1005,7 +987,7 @@ html.has-webgl-kelp body::after {
   gap: 0.35rem;
   width: min(100%, 17rem);
   margin-top: var(--space-3);
-  color: var(--text-muted);
+  color: var(--text-dim);
   font-family: var(--font-head);
   font-size: 0.7rem;
   font-weight: 700;
@@ -1274,52 +1256,6 @@ html.theme-kelp-studies body::after {
   .kelp-study-card-wide .kelp-study-canvas {
     height: 20rem;
   }
-}
-
-/* Opaque deep water keeps the jagged, reference-led kelp silhouettes legible. */
-html.theme-kelp-studies {
-  --field-deep: hsl(222 65% 5%);
-  --field: hsl(219 57% 10%);
-  --field-light: hsl(220 51% 16%);
-  --surface: hsl(221 47% 10% / 0.78);
-  --surface-strong: hsl(221 48% 9% / 0.88);
-  --rule: hsl(219 68% 67% / 0.28);
-  --rule-strong: hsl(219 72% 72% / 0.52);
-  --text: hsl(216 58% 92%);
-  --text-dim: hsl(216 33% 74%);
-  --text-faint: hsl(216 24% 58%);
-  --aqua-bright: hsl(218 80% 83%);
-}
-
-html.theme-kelp-studies::before,
-html.theme-kelp-studies::after,
-html.theme-kelp-studies body::before,
-html.theme-kelp-studies body::after {
-  display: none;
-}
-
-.theme-kelp-studies .site-nav {
-  background: hsl(222 58% 7% / 0.88);
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-}
-
-.kelp-study-page { max-width: 64rem; margin: 0 auto; }
-.kelp-study-intro { max-width: 43rem; padding: clamp(1rem, 4vw, 3rem) 0 clamp(2rem, 5vw, 4rem); }
-.kelp-study-intro h1 { margin-top: var(--space-2); color: var(--aqua-bright); }
-.kelp-study-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
-.kelp-study-card { overflow: hidden; border: 1px solid var(--rule-strong); background: var(--surface-strong); box-shadow: 0 1.25rem 3rem hsl(225 85% 2% / 0.35); }
-.kelp-study-card-wide { grid-column: 1 / -1; }
-.kelp-study-canvas { display: block; width: 100%; height: 24rem; background: hsl(221 67% 7%); image-rendering: pixelated; }
-.kelp-study-card-wide .kelp-study-canvas { height: 28rem; }
-.kelp-study-copy { padding: var(--space-3) var(--space-3) var(--space-4); border-top: 1px solid var(--rule); }
-.kelp-study-copy h2 { margin-top: 0.35rem; color: var(--aqua-bright); }
-.kelp-study-copy p:last-child { margin: var(--space-1) 0 0; color: var(--text-dim); font-size: 0.92rem; line-height: 1.55; }
-
-@media (max-width: 50rem) {
-  .kelp-study-grid { grid-template-columns: 1fr; }
-  .kelp-study-card-wide { grid-column: auto; }
-  .kelp-study-canvas, .kelp-study-card-wide .kelp-study-canvas { height: 20rem; }
 }
 
 .kelp-study-preview { display: block; width: 100%; height: 24rem; background: hsl(221 67% 7%); image-rendering: pixelated; }

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { ps1Snap, ps1Step } from "./ps1.js";
+import { ps1Animate, ps1Resize, ps1Snap, ps1Step } from "./ps1.js";
 
 const palette = [0x10182d, 0x1b2d5c, 0x3156a3, 0x426fc4];
 
@@ -232,19 +232,23 @@ function makeStudy(type) {
 function startStudy(canvas) {
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: false, antialias: false, powerPreference: "low-power" });
   const scene = new THREE.Scene();
+  scene.fog = new THREE.Fog(0x061127, 8, 18);
   const camera = new THREE.PerspectiveCamera(37, 1, 0.1, 30);
   const study = makeStudy(canvas.dataset.kelpStudy);
   scene.add(study.group);
+  const box = new THREE.Box3().setFromObject(study.group);
+  const center = box.getCenter(new THREE.Vector3());
+  const size = box.getSize(new THREE.Vector3());
   renderer.setClearColor(0x061127);
   renderer.setPixelRatio(1);
-  camera.position.set(0, 0.25, 8.1);
-  camera.lookAt(0, 0.2, 0);
-
   function resize() {
     const bounds = canvas.getBoundingClientRect();
-    renderer.setSize(Math.max(bounds.width, 1), Math.max(bounds.height, 1), false);
-    camera.aspect = bounds.width / Math.max(bounds.height, 1);
-    camera.updateProjectionMatrix();
+    ps1Resize(renderer, scene, camera, bounds);
+    // Tall crowns and wide groves both stay inside the card, including on phones.
+    const halfFov = THREE.MathUtils.degToRad(camera.fov / 2);
+    const distance = Math.max(size.y, size.x / camera.aspect) / (2 * Math.tan(halfFov));
+    camera.position.set(center.x, center.y, Math.max(5, distance * 1.15 + size.z / 2));
+    camera.lookAt(center);
   }
 
   function render(time) {
@@ -260,17 +264,11 @@ function startStudy(canvas) {
   }
 
   resize();
-  render(0);
-  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let last = 0;
-  // Rendered every frame: the PS1 read comes from snapped vertices and stepped
-  // sway values, so throttling the loop only added lag.
-  function tick(time) {
+  ps1Animate(canvas, (time) => {
     last = time;
     render(time);
-    if (!reducedMotion.matches) requestAnimationFrame(tick);
-  }
-  if (!reducedMotion.matches) requestAnimationFrame(tick);
+  });
   window.addEventListener("resize", () => { resize(); render(last); });
 }
 

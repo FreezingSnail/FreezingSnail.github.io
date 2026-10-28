@@ -626,14 +626,11 @@ function drawRareAnimal(ctx, animal, time) {
   const scale = animal.scale;
   const kinds = ["whale", "manta", "shark"];
   if (sprites) {
-    // The manta model is top-down, so its nose is rotated onto the travel axis
-    // and its wingspan squeezed to read as a flap rather than a flat glide.
-    const manta = animal.kind === 1;
+    // Sprite cameras expose the actual hinged wings and keep every nose on +X.
     sprites.draw(ctx, kinds[animal.kind], 0, animal.x, animal.y, scale, {
       alpha: animal.alpha,
       flip: animal.direction,
       angle: 0,
-      squeeze: manta ? 0.78 + Math.abs(Math.sin(time * 0.0016)) * 0.22 : 1,
       time,
     });
     return;
