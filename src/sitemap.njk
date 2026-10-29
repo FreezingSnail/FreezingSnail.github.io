@@ -9,4 +9,9 @@ eleventyExcludeFromCollections: true
     <loc>{{ site.url }}{{ page.url | replace("/", "", 1) }}</loc>
   </url>
 {% endfor %}
+{% for game in games %}
+  <url>
+    <loc>{{ site.url }}games/{{ game.slug }}/</loc>
+  </url>
+{% endfor %}
 </urlset>

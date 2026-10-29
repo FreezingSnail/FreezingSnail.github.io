@@ -1,0 +1,31 @@
+---
+layout: base.njk
+theme: theme-kelp-light
+title: Games · wobpager
+description: Arduboy games by FreezingSnail, playable in the browser.
+permalink: /games/
+---
+
+<section class="kelp-study-page game-page">
+  <header class="kelp-study-intro game-intro">
+    <p class="eyebrow">/ games</p>
+    <h1>Small worlds<br>for a tiny screen.</h1>
+    <p class="hero-copy">Arduboy games about mazes, space, and the weird life cycle of a jellyfish. Every game runs in the browser through the Ardens simulator, served from this site.</p>
+  </header>
+
+  <div class="game-grid">
+    {% for game in games %}
+      <a class="game-card" href="{{ ("/games/" + game.slug + "/") | url }}">
+        <img class="game-cover" src="{{ game.cover | url }}" alt="{{ game.coverAlt }}" width="128" height="64">
+        <div class="game-card-copy">
+          <p class="meta-label">/ {{ game.year }} · {{ game.genre }}</p>
+          <h2>{{ game.title }}</h2>
+          <p>{{ game.summary }}</p>
+          <span class="game-card-cta">Play in browser &rarr;</span>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+
+  <p class="game-credit">Browser playback by <a href="https://github.com/tiberiusbrown/Ardens">Ardens</a>, MIT licensed. No emulator service is involved: the player and game files are served from this site.</p>
+</section>

@@ -1,0 +1,73 @@
+---
+layout: base.njk
+theme: theme-kelp-light
+pagination:
+  data: games
+  size: 1
+  alias: game
+permalink: "/games/{{ game.slug }}/"
+eleventyComputed:
+  title: "{{ game.title }} · wobpager"
+  description: "{{ game.summary }}"
+eleventyExcludeFromCollections: true
+---
+
+<article class="kelp-study-page game-page game-detail-page">
+  <header class="game-hero">
+    <p class="eyebrow">/ {{ game.year }} · {{ game.genre }} · {{ game.version }}</p>
+    <h1>{{ game.title }}</h1>
+    <p class="hero-copy">{{ game.summary }}</p>
+  </header>
+
+  <div class="game-layout">
+    <section class="game-player" aria-label="Play {{ game.title }}">
+      <div class="game-player-frame">
+        <iframe
+          src="{{ ("/play/ardens/player.html?file=/games/files/" + game.file.name) | url }}"
+          title="Play {{ game.title }} on the Ardens Arduboy simulator"
+          allow="autoplay; fullscreen; gamepad"
+          loading="lazy"
+        ></iframe>
+      </div>
+      <p class="game-player-note">Click the screen to focus. Arrow keys move. <kbd>A</kbd>/<kbd>Z</kbd> is A, <kbd>S</kbd>/<kbd>X</kbd>/<kbd>B</kbd> is B. Touch controls appear on phones.</p>
+    </section>
+
+    <aside class="game-sidebar">
+      <section class="game-sidebar-block">
+        <p class="meta-label">/ controls</p>
+        <dl class="game-controls">
+          {% for control in game.controls %}
+            <dt>{{ control[0] }}</dt>
+            <dd>{{ control[1] }}</dd>
+          {% endfor %}
+        </dl>
+      </section>
+
+      <section class="game-sidebar-block">
+        <p class="meta-label">/ links</p>
+        <ul class="game-links">
+          <li><a href="{{ game.release }}">Download {{ game.version }}</a></li>
+          <li><a href="{{ game.source }}">Source on GitHub</a></li>
+          <li><a href="{{ ("/play/ardens/player.html?file=/games/files/" + game.file.name) | url }}" target="_blank" rel="noopener">Open player in a new tab</a></li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <section class="game-notes">
+    <div>
+      <p class="meta-label">/ field notes</p>
+      <p class="game-description">{{ game.description }}</p>
+    </div>
+    <div>
+      <p class="meta-label">/ features</p>
+      <ul class="game-features">
+        {% for feature in game.features %}
+          <li>{{ feature }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+
+  <p class="game-back"><a href="{{ "/games/" | url }}">&larr; All games</a></p>
+</article>

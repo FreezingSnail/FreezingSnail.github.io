@@ -1517,3 +1517,229 @@ body.glass-background-body .site-main {
     padding: var(--space-3);
   }
 }
+
+/* Games: keep the cartridge art oversized and the player itself unadorned. */
+.game-intro {
+  max-width: 46rem;
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--space-3);
+}
+
+.game-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--rule-strong);
+  background: var(--surface-strong);
+  color: var(--text);
+  box-shadow: 0 1.25rem 3rem hsl(225 85% 2% / 0.28);
+  transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+.game-card:hover {
+  border-color: var(--aqua);
+  background: var(--surface-hover);
+  color: var(--text);
+  transform: translateY(-2px);
+}
+
+.game-cover {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2 / 1;
+  border-bottom: 1px solid var(--rule);
+  background: #061127;
+  image-rendering: pixelated;
+}
+
+.game-card-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: var(--space-3);
+}
+
+.game-card-copy h2 {
+  margin-top: 0.35rem;
+  color: var(--aqua-bright);
+}
+
+.game-card-copy p:not(.meta-label) {
+  margin: var(--space-1) 0 var(--space-3);
+  color: var(--text-dim);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.game-card-cta {
+  margin-top: auto;
+  color: var(--aqua);
+  font-family: var(--font-head);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.game-hero {
+  max-width: 46rem;
+  padding: clamp(1rem, 4vw, 3rem) 0 var(--space-4);
+}
+
+.game-hero h1 {
+  margin-top: var(--space-2);
+  color: var(--aqua-bright);
+}
+
+.game-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 15rem;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.game-player-frame {
+  aspect-ratio: 2 / 1;
+  overflow: hidden;
+  border: 1px solid var(--rule-strong);
+  background: #000;
+  box-shadow: 0 1.25rem 3rem hsl(225 85% 2% / 0.35);
+}
+
+.game-player iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.game-player-note {
+  margin-top: var(--space-2);
+  color: var(--text-faint);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+kbd {
+  display: inline-block;
+  min-width: 1.5em;
+  padding: 0.05em 0.35em;
+  border: 1px solid var(--rule-strong);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--font-head);
+  font-size: 0.78em;
+  text-align: center;
+}
+
+.game-sidebar {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.game-sidebar-block {
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--rule);
+}
+
+.game-controls {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.35rem 0.8rem;
+  margin: var(--space-2) 0 0;
+}
+
+.game-controls dt {
+  color: var(--accent-warm);
+  font-family: var(--font-head);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.game-controls dd {
+  margin: 0;
+  color: var(--text-dim);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.game-links {
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.game-links li {
+  margin-bottom: 0.35rem;
+  font-size: 0.88rem;
+}
+
+.game-notes {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: var(--space-4);
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--rule);
+}
+
+.game-description {
+  margin-top: var(--space-2);
+  color: var(--text-dim);
+  font-size: 1.02rem;
+}
+
+.game-features {
+  margin: var(--space-2) 0 0;
+  padding-left: var(--space-3);
+  color: var(--text-dim);
+  font-size: 0.92rem;
+}
+
+.game-back {
+  margin-top: var(--space-5);
+  color: var(--text-faint);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+
+@media (max-width: 50rem) {
+  .game-layout,
+  .game-notes {
+    grid-template-columns: 1fr;
+  }
+
+  .game-sidebar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+  }
+}
+
+@media (max-width: 32rem) {
+  .game-sidebar {
+    grid-template-columns: 1fr;
+  }
+}
+
+.game-detail-page {
+  padding: var(--content-inset);
+  border: 1px solid var(--rule-strong);
+  background: var(--surface);
+  box-shadow: 0 1.25rem 3rem hsl(184 48% 8% / 0.18);
+  -webkit-backdrop-filter: blur(5px) saturate(1.03);
+  backdrop-filter: blur(5px) saturate(1.03);
+}
+
+.game-credit {
+  max-width: 46rem;
+  margin: var(--space-4) 0 0;
+  color: var(--text-faint);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}

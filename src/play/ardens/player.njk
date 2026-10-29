@@ -1,0 +1,199 @@
+---
+permalink: /play/ardens/player.html
+eleventyExcludeFromCollections: true
+---
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ardens Player</title>
+</head>
+
+<style>
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: #000;
+}
+
+#canvas {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    margin: 0px;
+    border: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: block;
+    image-rendering: optimizeSpeed;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -o-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    -ms-interpolation-mode: nearest-neighbor;}
+
+#status {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: 1rem;
+    color: #d8f6ff;
+    background: #061127;
+    font: 600 0.8rem/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    letter-spacing: 0.08em;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+#status[hidden] {
+    display: none;
+}
+
+#start {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    gap: 0.5rem;
+    place-content: center;
+    color: #d8f6ff;
+    background:
+        radial-gradient(circle at 50% 45%, hsl(196 68% 18% / 0.5), transparent 55%),
+        #061127;
+    font: 700 0.82rem/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    letter-spacing: 0.1em;
+    text-align: center;
+    text-transform: uppercase;
+    cursor: pointer;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+#start::before {
+    content: "\25B6";
+    color: #6ff0ff;
+    font-size: 1.6rem;
+    line-height: 1;
+}
+
+#start small {
+    color: hsl(190 32% 62%);
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+}
+
+#start:disabled {
+    opacity: 0.68;
+}
+
+#start[hidden] {
+    display: none;
+}
+
+</style>
+
+<body>
+
+    <canvas id="canvas" tabindex="0" ondrop="dropHandler(event)" ondragover="event.preventDefault()" oncontextmenu="event.preventDefault()"></canvas>
+    <div id="start" aria-hidden="true"><span id="start-label">Loading game&hellip;</span><small>Ardens Arduboy player</small></div>
+    <p id="status" role="status">Loading Ardens&hellip;</p>
+
+    <script type='text/javascript'>
+        var Module = {
+            canvas: (function() { return document.getElementById('canvas'); })()
+        };
+
+        const startButton = document.getElementById("start");
+        const startLabel = document.getElementById("start-label");
+
+        function hideStart() {
+            startButton.hidden = true;
+        }
+
+        function readyToPlay() {
+            startLabel.textContent = "Click to play";
+        }
+
+        Module.canvas.addEventListener("click", (e) => {
+            Module.canvas.focus();
+            hideStart();
+        });
+        window.addEventListener("keydown", hideStart, { once: true });
+
+        function loadFile(param, fname, fdata) {
+            var ptr = Module._malloc(fdata.length);
+            Module.HEAPU8.set(fdata, ptr)
+            Module.ccall('load_file', 'number', ['string', 'string', 'number', 'number'], [param, fname, ptr, fdata.length]);
+            Module._free(ptr)
+        }
+
+        function dropHandler(ev) {
+            ev.preventDefault();
+            [...ev.dataTransfer.files].forEach((f, i) => {
+
+                var fr = new FileReader();
+                fr.onloadend = evt => {
+                    const fdata = new Uint8Array(evt.target.result);
+                    loadFile('file', f.name, fdata)
+                };
+                fr.readAsArrayBuffer(f);
+
+                console.log(f);
+            });
+        }
+
+        function setParam(key, value) {
+            return Module.ccall('setparam', null, ['string', 'string'], [key, value]);
+        }
+
+        function setStatus(message) {
+            const status = document.getElementById('status');
+            if (message) {
+                status.textContent = message;
+                status.hidden = false;
+            } else {
+                status.hidden = true;
+            }
+        }
+
+        Module['onRuntimeInitialized'] = function() {
+            const params = new URLSearchParams(window.location.search);
+            const jobs = [];
+            for (const [param, fname] of params) {
+                if (setParam(param, fname)) continue;
+                setParam('loading', '1');
+                setStatus('Loading game\u2026');
+                jobs.push(fetch(fname).then(rsp => {
+                    if (!rsp.ok) throw new Error('Could not load ' + fname + ' (' + rsp.status + ')');
+                    return rsp.arrayBuffer();
+                }).then(buf => loadFile(param, fname, new Uint8Array(buf))));
+            }
+            if (!jobs.length) {
+                setStatus(null);
+                readyToPlay();
+                return;
+            }
+            Promise.all(jobs).then(() => {
+                setStatus(null);
+                readyToPlay();
+            }).catch(err => {
+                console.error(err);
+                setStatus(err.message);
+            });
+        };
+    </script>
+
+    <script src="ArdensPlayer.js"></script>
+
+</body>
+
+</html>
